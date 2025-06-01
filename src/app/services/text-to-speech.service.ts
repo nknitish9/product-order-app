@@ -7,7 +7,7 @@ export class TextToSpeechService {
 
   constructor() {}
 
-  // Using Web Speech API (completely free and built into browsers)
+  // Using Web Speech API
   speakText(text: string): void {
     if ('speechSynthesis' in window) {
       // Cancel any ongoing speech
