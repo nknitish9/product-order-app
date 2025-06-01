@@ -1,0 +1,91 @@
+<div class="container">
+  <h1>Product Order List</h1>
+  
+  <!-- Grid 1: Product Selection -->
+  <div class="order-section">
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Quantity</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of getVisibleRows(); let i = index">
+          <td>
+            <select 
+              [(ngModel)]="row.selectedProduct" 
+              (change)="onProductSelect(productRows.indexOf(row))"
+              class="dropdown">
+              <option value="">Choose Product</option>
+              <option *ngFor="let product of getAvailableProducts(productRows.indexOf(row))" [value]="product">
+                {{ product }}
+              </option>
+            </select>
+          </td>
+          <td>
+            <select 
+              [(ngModel)]="row.selectedQuantity" 
+              (change)="onQuantitySelect(productRows.indexOf(row))"
+              class="dropdown"
+              [disabled]="!row.isProductSelected">
+              <option value="-1">Choose Quantity</option>
+              <option *ngFor="let qty of quantities" [value]="qty">
+                {{ qty }}
+              </option>
+            </select>
+          </td>
+          <td>
+            <button 
+              (click)="addToOrder(productRows.indexOf(row))" 
+              class="add-btn"
+              [disabled]="!isAddButtonEnabled(row)">
+              ADD
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="button-container">
+      <button 
+        *ngIf="shouldShowOrderButton()" 
+        (click)="showOrder()" 
+        class="show-order-btn">
+        Show Order
+      </button>
+      <button (click)="resetOrder()" class="reset-btn">Reset Order</button>
+    </div>
+  </div>
+
+  <!-- Grid 2: Final Order Display -->
+  <div *ngIf="showOrderGrid" class="order-display">
+    <h2>Your Order</h2>
+    
+    <div *ngIf="finalOrder.length > 0">
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of finalOrder">
+            <td>{{ product.name }}</td>
+            <td>{{ product.quantity }}</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="button-container">
+        <button (click)="readOrder()" class="read-order-btn">What is my Order?</button>
+      </div>
+    </div>
+
+    <div *ngIf="finalOrder.length === 0" class="empty-order">
+      <p>No items in your order yet!</p>
+    </div>
+  </div>
+</div>
