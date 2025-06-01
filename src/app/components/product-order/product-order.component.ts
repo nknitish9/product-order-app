@@ -90,8 +90,6 @@ export class ProductOrderComponent implements OnInit {
     row.selectedQuantity = -1;
     row.isProductSelected = false;
     row.isQuantitySelected = false;
-
-    // Removed the alert here - no more popup when adding to order
   }
 
   showOrder(): void {
