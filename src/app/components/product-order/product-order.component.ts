@@ -40,7 +40,6 @@ export class ProductOrderComponent implements OnInit {
     if (row.selectedProduct) {
       row.isProductSelected = true;
       
-      // Add new row if this is the last row and we haven't reached max
       if (rowIndex === this.productRows.length - 1 && this.productRows.length < this.maxRows) {
         this.addNewRow();
       }
@@ -61,7 +60,6 @@ export class ProductOrderComponent implements OnInit {
   addToOrder(rowIndex: number): void {
     const row = this.productRows[rowIndex];
     
-    // Validation
     if (!row.isProductSelected || !row.selectedProduct) {
       alert('Please select a product first!');
       return;
@@ -72,20 +70,16 @@ export class ProductOrderComponent implements OnInit {
       return;
     }
 
-    // Check if product already exists in final order
     const existingProductIndex = this.finalOrder.findIndex(p => p.name === row.selectedProduct);
     if (existingProductIndex !== -1) {
-      // Update existing product quantity
       this.finalOrder[existingProductIndex].quantity += row.selectedQuantity;
     } else {
-      // Add new product to order
       this.finalOrder.push({
         name: row.selectedProduct,
         quantity: row.selectedQuantity
       });
     }
 
-    // Reset the row
     row.selectedProduct = '';
     row.selectedQuantity = -1;
     row.isProductSelected = false;
@@ -93,7 +87,6 @@ export class ProductOrderComponent implements OnInit {
   }
 
   showOrder(): void {
-    // Remove unfilled rows (rows that don't have both product and quantity selected)
     this.productRows = this.productRows.filter(row => 
       row.isProductSelected && row.isQuantitySelected && 
       row.selectedProduct && row.selectedQuantity !== -1
@@ -125,15 +118,12 @@ export class ProductOrderComponent implements OnInit {
   }
 
   getAvailableProducts(currentRowIndex: number): string[] {
-    // Get products already selected in current session (in productRows)
     const selectedInRows = this.productRows
       .filter((row, index) => index !== currentRowIndex && row.isProductSelected)
       .map(row => row.selectedProduct);
-    
-    // Get products already in final order
+
     const selectedInOrder = this.finalOrder.map(p => p.name);
-    
-    // Combine both lists
+
     const allSelected = [...selectedInRows, ...selectedInOrder];
     
     return this.availableProducts.filter(product => !allSelected.includes(product));
@@ -147,12 +137,10 @@ export class ProductOrderComponent implements OnInit {
     this.addNewRow();
   }
 
-  // Get only the rows that should be displayed (with selections or the first empty row)
   getVisibleRows(): ProductRow[] {
     const filledRows = this.productRows.filter(row => row.isProductSelected || row.isQuantitySelected);
     const emptyRows = this.productRows.filter(row => !row.isProductSelected && !row.isQuantitySelected);
     
-    // Show filled rows plus one empty row for new input
     if (emptyRows.length > 0 && filledRows.length < this.maxRows) {
       return [...filledRows, emptyRows[0]];
     }
@@ -160,13 +148,11 @@ export class ProductOrderComponent implements OnInit {
     return filledRows;
   }
 
-  // Check if ADD button should be enabled
   isAddButtonEnabled(row: ProductRow): boolean {
     return row.isProductSelected && row.isQuantitySelected && 
            row.selectedProduct !== '' && row.selectedQuantity !== -1;
   }
 
-  // Check if Show Order button should be visible - now only shows when there are actual items added
   shouldShowOrderButton(): boolean {
     return this.finalOrder.length > 0 && !this.showOrderGrid;
   }

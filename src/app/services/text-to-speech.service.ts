@@ -7,10 +7,8 @@ export class TextToSpeechService {
 
   constructor() {}
 
-  // Using Web Speech API
   speakText(text: string): void {
     if ('speechSynthesis' in window) {
-      // Cancel any ongoing speech
       speechSynthesis.cancel();
       
       const utterance = new SpeechSynthesisUtterance(text);
@@ -26,7 +24,6 @@ export class TextToSpeechService {
     }
   }
 
-  // Stop any ongoing speech
   stopSpeech(): void {
     if ('speechSynthesis' in window) {
       speechSynthesis.cancel();
